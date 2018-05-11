@@ -65,12 +65,6 @@ void QuadTree::Divide() {
     //Quad4
     Quad qd4 = {quad.p.X + quad.size / 2, quad.p.Y + quad.size / 2, quad.size / 2};
     q4 = new QuadTree(this, qd4);
-
-    printf("Divided: \n");
-    printf("X-%f, Y-%f, Size-%f\n", q1->quad.p.X, q1->quad.p.Y, q1->quad.size);
-    printf("X-%f, Y-%f, Size-%f\n", q2->quad.p.X, q2->quad.p.Y, q2->quad.size);
-    printf("X-%f, Y-%f, Size-%f\n", q3->quad.p.X, q3->quad.p.Y, q3->quad.size);
-    printf("X-%f, Y-%f, Size-%f\n", q4->quad.p.X, q4->quad.p.Y, q4->quad.size);
 }
 
 int QuadTree::Insert(Point p) {
