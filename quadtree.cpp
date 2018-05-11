@@ -85,9 +85,6 @@ int QuadTree::Insert(Point p) {
 
     if (points.size() < POINT_COUNT && !filled) {
         points.push_back(p);
-
-        printf("Inserted: X-%f, Y-%f, QUAD->X-%f, Y-%f, Size-%f\n", p.X, p.Y, quad.p.X, quad.p.Y, quad.size);
-
         return INSERT_SUCCESS;
     }
     else filled = true;
