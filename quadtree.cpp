@@ -1,5 +1,7 @@
 #include "quadtree.h"
 
+/*fregrg*/
+
 using namespace std;
 
 void InsertInVector(vector<Point> *b, vector<Point> e) {
