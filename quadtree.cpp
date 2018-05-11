@@ -12,15 +12,16 @@ QuadTree::QuadTree(QuadTree *parent, Quad quad)
     this->quad = quad;
 }
 
+QuadTree::QuadTree(QuadTree *parent, float X, float Y, float size) {
+    this->parent = parent;
+    this->quad = Quad {X, Y, size};
+}
+
 QuadTree::~QuadTree() {
     delete q1;
     delete q2;
     delete q3;
     delete q4;
-}
-
-void QuadTree::SetQuad(Quad quad) {
-    this->quad = quad;
 }
 
 bool Quad::IntersectWithQuad(Quad q) {
@@ -39,31 +40,31 @@ bool Quad::IntersectWithQuad(Quad q) {
         return false;
 }
 
-bool Quad::ContainPoint(Point p) {
-    if ( ((p.X > this->p.X) && (p.X < this->p.X + this->size)) && ( (p.Y > this->p.Y) && (p.Y < this->p.Y + this->size) ) ) return true;
-    else return false;
+int Quad::ContainPoint(Point p) {
+    if ( ((p.X > this->p.X) && (p.X < this->p.X + this->size)) && ( (p.Y > this->p.Y) && (p.Y < this->p.Y + this->size) ) ) return QUAD_CONTAIN;
+    else if (
+                ( ((p.X == this->p.X) || p.X == (this->p.X + this->size)) && (p.Y >= this->p.Y && p.Y <= this->p.Y + this->size) ) ||
+                ( (p.Y == this->p.Y || p.Y == (this->p.Y + this->size))  &&  (p.X >= this->p.X && p.X <= this->p.X + this->size))
+            ) return QUAD_BORDER_INTERSECT;
+    else return QUAD_NOT_CONTAIN;
 }
 
-bool QuadTree::Divide() {
-    Quad qd;
-
+void QuadTree::Divide() {
     //Quad 1
-    qd = quad;
-    qd.size = quad.size / 2;
-    q1 = new QuadTree(this, qd);
+    Quad qd1 = {quad.p, quad.size / 2};
+    q1 = new QuadTree(this, qd1);
 
     //Quad2
-    qd.p.X = qd.p.X + quad.size / 2;
-    q2 = new QuadTree(this, qd);
-
-    //Quad4
-    qd.p.Y = qd.p.Y + quad.size / 2;
-    q4 = new QuadTree(this, qd);
+    Quad qd2 = {quad.p.X + quad.size / 2, quad.p.Y, quad.size / 2};
+    q2 = new QuadTree(this, qd2);
 
     //Quad3
-    qd.p.X = quad.p.X;
-    qd.p.Y = quad.p.Y + quad.size / 2;
-    q3 = new QuadTree(this, qd);
+    Quad qd3 = {quad.p.X, quad.p.Y + quad.size / 2, quad.size / 2};
+    q3 = new QuadTree(this, qd3);
+
+    //Quad4
+    Quad qd4 = {quad.p.X + quad.size / 2, quad.p.Y + quad.size / 2, quad.size / 2};
+    q4 = new QuadTree(this, qd4);
 
     printf("Divided: \n");
     printf("X-%f, Y-%f, Size-%f\n", q1->quad.p.X, q1->quad.p.Y, q1->quad.size);
@@ -72,7 +73,7 @@ bool QuadTree::Divide() {
     printf("X-%f, Y-%f, Size-%f\n", q4->quad.p.X, q4->quad.p.Y, q4->quad.size);
 }
 
-bool QuadTree::Insert(Point p) {
+int QuadTree::Insert(Point p) {
     if (parent) {
         for (size_t i = 0; i < parent->points.size(); i++) {
             if (quad.ContainPoint(parent->points[i])) {
@@ -82,9 +83,10 @@ bool QuadTree::Insert(Point p) {
         }
     }
 
-    if (!quad.ContainPoint(p)) {
+    int pointCheckResult = quad.ContainPoint(p);
+    if (pointCheckResult != QUAD_CONTAIN) {
         printf("Skiped: X-%f, Y-%f, QUAD->X-%f, Y-%f, Size-%f\n", p.X, p.Y, quad.p.X, quad.p.Y, quad.size);
-        return false;
+        return pointCheckResult;
     }
 
     if (points.size() < POINT_COUNT && !filled) {
@@ -92,18 +94,18 @@ bool QuadTree::Insert(Point p) {
 
         printf("Inserted: X-%f, Y-%f, QUAD->X-%f, Y-%f, Size-%f\n", p.X, p.Y, quad.p.X, quad.p.Y, quad.size);
 
-        return true;
+        return INSERT_SUCCESS;
     }
     else filled = true;
 
     if (!q1) Divide();
 
-    if (q1->Insert(p)) return true;
-    if (q2->Insert(p)) return true;
-    if (q3->Insert(p)) return true;
-    if (q4->Insert(p)) return true;
+    if (q1->Insert(p) == INSERT_SUCCESS) return INSERT_SUCCESS;
+    if (q2->Insert(p) == INSERT_SUCCESS) return INSERT_SUCCESS;
+    if (q3->Insert(p) == INSERT_SUCCESS) return INSERT_SUCCESS;
+    if (q4->Insert(p) == INSERT_SUCCESS) return INSERT_SUCCESS;
 
-    return false;
+    return INSERT_FAIL;
 }
 
 vector<Point> QuadTree::FindPointsArround(Quad q) {
