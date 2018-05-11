@@ -21,7 +21,6 @@ private:
 private:
     // Для рисования используем события мыши
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 };
 
