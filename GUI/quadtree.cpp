@@ -85,7 +85,6 @@ int QuadTree::Insert(Point p) {
 
     int pointCheckResult = quad.ContainPoint(p);
     if (pointCheckResult != QUAD_CONTAIN) {
-        printf("Skiped: X-%f, Y-%f, QUAD->X-%f, Y-%f, Size-%f\n", p.X, p.Y, quad.p.X, quad.p.Y, quad.size);
         return pointCheckResult;
     }
 
