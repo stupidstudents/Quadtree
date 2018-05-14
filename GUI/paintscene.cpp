@@ -16,18 +16,28 @@ paintScene::~paintScene()
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Point p = {event->scenePos().x(), event->scenePos().y()};
-    // При нажатии кнопки мыши отрисовываем эллипс
-    // Сохраняем координаты точки нажатия
 
-    if (quadTree->Insert(p) == INSERT_SUCCESS) {
-        addEllipse(p.X - 2,
-                   p.Y - 2,
-                   4,
-                   4,
-                   QPen(Qt::NoPen),
-                   QBrush(Qt::red));
-        Draw(quadTree);
+    if (event->buttons() == Qt::LeftButton) {
+        if (quadTree->Insert(p) == INSERT_SUCCESS) {
+            addEllipse(p.X - 2,
+                       p.Y - 2,
+                       4,
+                       4,
+                       QPen(Qt::NoPen),
+                       QBrush(Qt::red));
+            Draw(quadTree);
+        }
     }
+    else if (event->buttons() == Qt::RightButton) {
+        std::vector<Point> points = quadTree->FindPointsArround(Quad {p.X - 2, p.Y - 2, 4});
+
+        if (points.size() == 0) qDebug() <<"Points not found!\n";
+
+        for (size_t i = 0; i < points.size(); i++) {
+            qDebug() << "Find: X-" <<points[i].X << ", Y-" << points[i].Y <<"\n";
+        }
+    }
+
 
     previousPoint = event->scenePos();
 }
