@@ -110,7 +110,7 @@ vector<Point> QuadTree::FindPointsArround(Quad q) {
     if (!quad.IntersectWithQuad(q)) return pointsInQuad;
 
     for (size_t i = 0; i < points.size(); i++) {
-        if (q.ContainPoint(points[i])) pointsInQuad.push_back(points[i]);
+        if (q.ContainPoint(points[i]) == QUAD_CONTAIN) pointsInQuad.push_back(points[i]);
     }
 
     if (!q1) return pointsInQuad;
