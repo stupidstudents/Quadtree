@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         paint.cpp \
     paintscene.cpp \
-    quadtree.cpp
+    quadtree.cpp \
+    customlabel.cpp
 
 HEADERS  += paint.h \
     paintscene.h \
-    quadtree.h
+    quadtree.h \
+    customlabel.h
 
 FORMS    += paint.ui
