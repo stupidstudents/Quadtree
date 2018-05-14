@@ -5,7 +5,9 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 #include <QDebug>
+#include <QLabel>
 #include "quadtree.h"
+#include "customlabel.h"
 
 class paintScene : public QGraphicsScene
 {
@@ -21,6 +23,7 @@ public:
 private:
     QPointF     previousPoint;  // Координаты предыдущей точки
     QuadTree *quadTree;
+    std::vector<CustomLabel *> *labels;
 
 private:
     // Для рисования используем события мыши

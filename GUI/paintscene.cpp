@@ -6,11 +6,12 @@ paintScene::paintScene(QObject *parent) : QGraphicsScene(parent)
 
 void paintScene::setQuadTree(QuadTree *quadTree) {
     this->quadTree = quadTree;
+    labels = new std::vector<CustomLabel *>();
 }
 
 paintScene::~paintScene()
 {
-
+    delete labels;
 }
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -26,6 +27,17 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                        QPen(Qt::NoPen),
                        QBrush(Qt::red));
             Draw(quadTree);
+
+            CustomLabel *label1 = new CustomLabel(labels);
+            label1->setText("bla");
+            label1->setGeometry(QRect(10, 10, 100, 20));
+
+            CustomLabel *label2 = new CustomLabel(labels);
+            label2->setText("bla1");
+            label2->setGeometry(QRect(150, 150, 100, 20));
+
+            qDebug() <<label1->checkIntersect() <<"\n";
+            //addWidget(label);
         }
     }
     else if (event->buttons() == Qt::RightButton) {
