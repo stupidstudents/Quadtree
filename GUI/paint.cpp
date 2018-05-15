@@ -1,7 +1,6 @@
 #include "paint.h"
 #include "ui_paint.h"
 
-
 paint::paint(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::paint)
@@ -11,9 +10,8 @@ paint::paint(QWidget *parent) :
     quadTree = new QuadTree(nullptr, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
     scene = new paintScene();
     scene->setQuadTree(quadTree);
+
     ui->graphicsView->setScene(scene);
-
-
 
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &paint::slotTimer);

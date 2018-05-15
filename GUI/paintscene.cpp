@@ -6,7 +6,8 @@ paintScene::paintScene(QObject *parent) : QGraphicsScene(parent)
 
 void paintScene::setQuadTree(QuadTree *quadTree) {
     this->quadTree = quadTree;
-    labels = new std::vector<CustomLabel *>();
+    labels = new std::vector<CustomLabel*>();
+    labelGroup = new QGraphicsItemGroup();
 }
 
 paintScene::~paintScene()
@@ -19,6 +20,21 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Point p = {event->scenePos().x(), event->scenePos().y()};
 
     if (event->buttons() == Qt::LeftButton) {
+        QGraphicsItem *item = itemAt(p.X, p.Y, QTransform() );
+
+        if (item) {
+            QGraphicsProxyWidget *labelProxy = dynamic_cast<QGraphicsProxyWidget*>(item);
+
+            if (labelProxy) {
+                CustomLabel *label = dynamic_cast<CustomLabel*>(labelProxy->widget());
+
+                if (label) {
+                    label->Test();
+                }
+            }
+
+        }
+
         if (quadTree->Insert(p) == INSERT_SUCCESS) {
             addEllipse(p.X - 2,
                        p.Y - 2,
@@ -27,17 +43,6 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                        QPen(Qt::NoPen),
                        QBrush(Qt::red));
             Draw(quadTree);
-
-            CustomLabel *label1 = new CustomLabel(labels);
-            label1->setText("bla");
-            label1->setGeometry(QRect(10, 10, 100, 20));
-
-            CustomLabel *label2 = new CustomLabel(labels);
-            label2->setText("bla1");
-            label2->setGeometry(QRect(150, 150, 100, 20));
-
-            qDebug() <<label1->checkIntersect() <<"\n";
-            //addWidget(label);
         }
     }
     else if (event->buttons() == Qt::RightButton) {
@@ -47,11 +52,18 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
         for (size_t i = 0; i < points.size(); i++) {
             qDebug() << "Find: X-" <<points[i].X << ", Y-" << points[i].Y <<"\n";
+
+            addLabel(event->scenePos(), QString("test string"));
         }
     }
 
 
     previousPoint = event->scenePos();
+}
+
+void paintScene::addLabel(QPointF p, const QString text) {
+    CustomLabel *label = new CustomLabel(p, text, this);
+    addLine(p.x(), p.y(), p.x() + 20, p.y() + 20, QPen(Qt::lightGray));
 }
 
 void paintScene::Draw(QuadTree *qTree) {
