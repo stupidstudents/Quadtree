@@ -18,9 +18,10 @@ public:
     ~CustomLabel();
 
     bool checkIntersect(std::vector<CustomLabel*> *labels);
-    void Test();
+    void Close();
 private:
     const int Type = 99;
+    QGraphicsLineItem *line;
 };
 
 #endif // CUSTOMLABEL_H
