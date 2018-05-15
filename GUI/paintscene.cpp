@@ -7,12 +7,17 @@ paintScene::paintScene(QObject *parent) : QGraphicsScene(parent)
 void paintScene::setQuadTree(QuadTree *quadTree) {
     this->quadTree = quadTree;
     labels = new std::vector<CustomLabel*>();
-    labelGroup = new QGraphicsItemGroup();
 }
 
 paintScene::~paintScene()
 {
+    for (std::vector<CustomLabel*>::iterator it = labels->begin(); it != labels->end(); ++it) {
+        delete (*it);
+    }
+    labels->clear();
+
     delete labels;
+    delete quadTree;
 }
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -20,7 +25,7 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Point p = {event->scenePos().x(), event->scenePos().y()};
 
     if (event->buttons() == Qt::LeftButton) {
-        QGraphicsItem *item = itemAt(p.X, p.Y, QTransform() );
+        QGraphicsItem *item = itemAt(event->scenePos(), QTransform() );
 
         if (item) {
             QGraphicsProxyWidget *labelProxy = dynamic_cast<QGraphicsProxyWidget*>(item);
@@ -29,7 +34,8 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 CustomLabel *label = dynamic_cast<CustomLabel*>(labelProxy->widget());
 
                 if (label) {
-                    label->Test();
+                    label->Close();
+                    return;
                 }
             }
 
@@ -46,14 +52,14 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
     else if (event->buttons() == Qt::RightButton) {
-        std::vector<Point> points = quadTree->FindPointsArround(Quad {p.X - 2, p.Y - 2, 4});
+        std::vector<Point> points = quadTree->FindPointsArround(Quad {p.X - 4, p.Y - 4, 8});
 
         if (points.size() == 0) qDebug() <<"Points not found!\n";
 
         for (size_t i = 0; i < points.size(); i++) {
             qDebug() << "Find: X-" <<points[i].X << ", Y-" << points[i].Y <<"\n";
 
-            addLabel(event->scenePos(), QString("test string"));
+            addLabel(event->scenePos(), QString("te\nstggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg\nstring\ntest"));
         }
     }
 
@@ -63,7 +69,8 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void paintScene::addLabel(QPointF p, const QString text) {
     CustomLabel *label = new CustomLabel(p, text, this);
-    addLine(p.x(), p.y(), p.x() + 20, p.y() + 20, QPen(Qt::lightGray));
+
+    //labels->push_back(label);
 }
 
 void paintScene::Draw(QuadTree *qTree) {

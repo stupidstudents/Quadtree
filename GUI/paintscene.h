@@ -27,7 +27,6 @@ public:
 private:
     QPointF     previousPoint;  // Координаты предыдущей точки
     QuadTree *quadTree;
-    QGraphicsItemGroup *labelGroup;
     std::vector<CustomLabel*> *labels;
 
 private:
