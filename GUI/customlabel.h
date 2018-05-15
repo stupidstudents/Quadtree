@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
+#include <QtMath>
 
 class CustomLabel : public QLabel
 {
@@ -22,6 +23,10 @@ public:
 private:
     const int Type = 99;
     QGraphicsLineItem *line;
+    QPointF p;
+
+    void MoveOnCircle();
+
 };
 
 #endif // CUSTOMLABEL_H

@@ -9,11 +9,14 @@ CustomLabel::CustomLabel(QPointF p, const QString &text, QGraphicsScene *scene, 
     //УБРАТЬ
 
     //setText(text);
+    this->p = p;
 
     QGraphicsProxyWidget *proxy = scene->addWidget(this);
     proxy->setPos(p.x() + 20, p.y() + 20);
 
     line = scene->addLine(p.x(), p.y(), p.x() + 20, p.y() + 20, QPen(Qt::lightGray));
+
+    MoveOnCircle();
 }
 
 CustomLabel::~CustomLabel() {
@@ -41,5 +44,15 @@ bool CustomLabel::checkIntersect(std::vector<CustomLabel*> *labels) {
     }
 
     return false;
+}
+
+void CustomLabel::MoveOnCircle() {
+    QPoint newP;
+    for (double i = 0; i < 360; i += 10) {
+        newP.setX(p.x() + 20 * qCos(qDegreesToRadians(i)));
+        newP.setY(p.y() + 20 * qSin(qDegreesToRadians(i)));
+        qDebug() <<newP;
+    }
+
 }
 
