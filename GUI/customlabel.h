@@ -2,22 +2,25 @@
 #define CUSTOMLABEL_H
 
 #include <QObject>
+#include <QMouseEvent>
 #include <QLabel>
 #include <QWidget>
 #include <QString>
+#include <QDebug>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsScene>
 
 class CustomLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit CustomLabel(std::vector<CustomLabel*> *labels, QWidget *parent = nullptr);
+    explicit CustomLabel(QPointF p, const QString &text, QGraphicsScene *scene, QWidget *parent = nullptr);
     ~CustomLabel();
 
-    void addLabel(CustomLabel *label);
-    bool checkIntersect();
+    bool checkIntersect(std::vector<CustomLabel*> *labels);
+    void Test();
 private:
-
-    std::vector<CustomLabel*> *labels;
+    const int Type = 99;
 };
 
 #endif // CUSTOMLABEL_H

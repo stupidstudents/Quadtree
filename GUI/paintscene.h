@@ -3,9 +3,12 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QPoint>
 #include <QTimer>
 #include <QDebug>
 #include <QLabel>
+#include <QGraphicsProxyWidget>
+#include <QTransform>
 #include "quadtree.h"
 #include "customlabel.h"
 
@@ -18,12 +21,14 @@ public:
     explicit paintScene(QObject *parent = 0);
     void setQuadTree(QuadTree *quadTree);
     void Draw(QuadTree *qTree);
+    void addLabel(QPointF p, const QString text);
     ~paintScene();
 
 private:
     QPointF     previousPoint;  // Координаты предыдущей точки
     QuadTree *quadTree;
-    std::vector<CustomLabel *> *labels;
+    QGraphicsItemGroup *labelGroup;
+    std::vector<CustomLabel*> *labels;
 
 private:
     // Для рисования используем события мыши
