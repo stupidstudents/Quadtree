@@ -1,34 +1,16 @@
 #include "customlabel.h"
 
-CustomLabel::CustomLabel(QPointF p, const QString &text, QGraphicsScene *scene, QWidget *parent) : QLabel(parent) {
-    //УБРАТЬ!
-    QFontMetrics metrics(this->font());
-
-    setText(metrics.elidedText(text, Qt::ElideRight, 100));
-
-    //УБРАТЬ
-
-    //setText(text);
+CustomLabel::CustomLabel(QPointF p, const QString &text, QVector<CustomLabel *> *labels, QWidget *parent) : QLabel(parent) {
     this->p = p;
-
-    QGraphicsProxyWidget *proxy = scene->addWidget(this);
-    proxy->setPos(p.x() + 20, p.y() + 20);
-
-    line = scene->addLine(p.x(), p.y(), p.x() + 20, p.y() + 20, QPen(Qt::lightGray));
-
-    MoveOnCircle();
+    this->labels = labels;
+    setText(text);
 }
 
 CustomLabel::~CustomLabel() {
-
-}
-
-void CustomLabel::Close() {
     delete line;
-    delete this;
 }
 
-bool CustomLabel::checkIntersect(std::vector<CustomLabel*> *labels) {
+/*bool CustomLabel::checkIntersect() {
     for (size_t i = 0; i < labels->size(); i++) {
         if(
                 (geometry().x() > labels->at(i)->geometry().x() && geometry().x() < (labels->at(i)->geometry().x() + labels->at(i)->geometry().width())) ||
@@ -44,15 +26,48 @@ bool CustomLabel::checkIntersect(std::vector<CustomLabel*> *labels) {
     }
 
     return false;
-}
+}*/
 
-void CustomLabel::MoveOnCircle() {
-    QPoint newP;
-    for (double i = 0; i < 360; i += 10) {
-        newP.setX(p.x() + 20 * qCos(qDegreesToRadians(i)));
-        newP.setY(p.y() + 20 * qSin(qDegreesToRadians(i)));
-        qDebug() <<newP;
+bool CustomLabel::checkIntersect() {
+    qDebug() << "\n" <<proxy->geometry();
+    qDebug() <<"---------";
+    for (size_t i = 0; i < labels->size(); i++) {
+        qDebug() <<labels->at(i)->proxy->geometry();
+        if (proxy->geometry().intersects(labels->at(i)->geometry())) return true;
     }
 
+    return false;
+}
+
+
+
+bool CustomLabel::TryToInsert(QGraphicsScene *scene) {
+    proxy = scene->addWidget(this);
+
+    for (double angle = 0; angle < 360; angle += 10) {
+        proxy->setPos(MoveOnCircle(angle));
+
+        if (!checkIntersect()) {
+            addToScene(scene, false);
+
+            return true;
+        }
+    }
+    addToScene(scene, true);
+    return false;
+}
+
+QPointF CustomLabel::MoveOnCircle(double step) {
+    QPointF point;
+
+    point.setX(p.x() + 20 * qCos(qDegreesToRadians(step)));
+    point.setY(p.y() + 20 * qSin(qDegreesToRadians(step)));
+
+    return point;
+}
+
+void CustomLabel::addToScene(QGraphicsScene *scene, bool intersected) {
+    line = scene->addLine(p.x(), p.y(), proxy->geometry().x(), proxy->geometry().y(), QPen(Qt::lightGray));
+    if (intersected) proxy->widget()->setStyleSheet("QLabel {background-color: red;}");
 }
 

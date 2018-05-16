@@ -15,18 +15,20 @@ class CustomLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit CustomLabel(QPointF p, const QString &text, QGraphicsScene *scene, QWidget *parent = nullptr);
+    explicit CustomLabel(QPointF p, const QString &text, QVector<CustomLabel *> *labels, QWidget *parent = nullptr);
     ~CustomLabel();
 
-    bool checkIntersect(std::vector<CustomLabel*> *labels);
-    void Close();
+    bool checkIntersect();
+    bool TryToInsert(QGraphicsScene *scene);
+
+    void addToScene(QGraphicsScene *scene, bool intersected);
 private:
-    const int Type = 99;
     QGraphicsLineItem *line;
     QPointF p;
+    QVector<CustomLabel*> *labels;
+    QGraphicsProxyWidget *proxy;
 
-    void MoveOnCircle();
-
+    QPointF MoveOnCircle(double step);
 };
 
 #endif // CUSTOMLABEL_H
