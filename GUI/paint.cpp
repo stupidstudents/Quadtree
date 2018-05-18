@@ -8,8 +8,7 @@ paint::paint(QWidget *parent) :
     ui->setupUi(this);
 
     quadTree = new QuadTree(nullptr, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
-    scene = new paintScene();
-    scene->setQuadTree(quadTree);
+    scene = new paintScene(quadTree);
 
     ui->graphicsView->setScene(scene);
 

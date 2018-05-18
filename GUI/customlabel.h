@@ -14,13 +14,15 @@ class CustomLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit CustomLabel(QPointF p, const QString &text, QWidget *parent = nullptr);
+    explicit CustomLabel(QPointF p, const QString &text, long unsigned int z_ind, QWidget *parent = nullptr);
     ~CustomLabel();
 
     bool TryToInsert(QGraphicsScene *scene, QVector<CustomLabel *> *labels);
 private:
-    const unsigned int Radius = 20;
+    const unsigned int Radius = 30;
     const unsigned int SideStep = 10;
+
+    long unsigned int z_ind;
 
     QGraphicsLineItem *line;
     QGraphicsEllipseItem *dot;

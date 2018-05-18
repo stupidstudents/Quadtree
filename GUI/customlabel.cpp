@@ -1,17 +1,17 @@
 #include "customlabel.h"
 
-CustomLabel::CustomLabel(QPointF p, const QString &text, QWidget *parent) : QLabel(parent) {
+CustomLabel::CustomLabel(QPointF p, const QString &text, long unsigned int z_ind, QWidget *parent) : QLabel(parent) {
     this->p = p;
+    this->z_ind = z_ind;
 
-    setFont(QFont("Arial", 12, 400));
+    setStyleSheet("QLabel {border: 1px solid gray; border-radius: 4px; background-color: #90FFDC;}");
+    setFont(QFont("Arial", 10, 500));
     setText(text);
-
 }
 
 CustomLabel::~CustomLabel() {
     delete line;
     delete dot;
-    delete proxy;
 }
 
 bool CustomLabel::checkIntersect(QVector<CustomLabel *> *labels) {
@@ -24,9 +24,9 @@ bool CustomLabel::checkIntersect(QVector<CustomLabel *> *labels) {
 
 bool CustomLabel::TryToInsert(QGraphicsScene *scene, QVector<CustomLabel *> *labels) {
     proxy = scene->addWidget(this);
-    proxy->setZValue(1);
+    proxy->setZValue(z_ind);
 
-    for (double angle = 0; angle < 360; angle += 20) {
+    for (double angle = 0; angle < 360; angle += 10) {
         previousPoint = MoveOnCircle(angle);
         QPointF circlePoint = previousPoint;
 
@@ -120,4 +120,7 @@ void CustomLabel::addToScene(QGraphicsScene *scene, QPointF *point) {
 
     line = scene->addLine(p.x(), p.y(), cPoint.x(), cPoint.y(), pen);
     dot = scene->addEllipse(cPoint.x() - 2, cPoint.y() - 2, 4, 4, Qt::NoPen, Qt::black);
+
+    line->setZValue(z_ind);
+    dot->setZValue(z_ind);
 }
