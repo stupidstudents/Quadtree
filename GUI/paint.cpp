@@ -8,8 +8,7 @@ paint::paint(QWidget *parent) :
     ui->setupUi(this);
 
     quadTree = new QuadTree(nullptr, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
-    scene = new paintScene();
-    scene->setQuadTree(quadTree);
+    scene = new paintScene(quadTree);
 
     ui->graphicsView->setScene(scene);
 
@@ -20,16 +19,23 @@ paint::paint(QWidget *parent) :
 
 paint::~paint()
 {
+    delete timer;
+    delete scene;
+    delete quadTree;
     delete ui;
 }
 
 void paint::slotTimer(){
     timer->stop();
     scene->setSceneRect(0,0,ui->graphicsView->width() - 20, ui->graphicsView->height() - 20);
-
 }
 
 void paint::resizeEvent(QResizeEvent *event){
     timer->start(100);
     QWidget::resizeEvent(event);
+}
+
+void paint::on_openFile_triggered()
+{
+
 }

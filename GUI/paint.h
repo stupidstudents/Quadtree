@@ -35,6 +35,7 @@ private:
 
 private slots:
     void slotTimer();
+    void on_openFile_triggered();
 };
 
 #endif // PAINT_H

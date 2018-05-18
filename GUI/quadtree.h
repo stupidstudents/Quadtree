@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdio.h>
+#include <string>
 
 #define INSERT_FAIL -1
 #define INSERT_SUCCESS 0
@@ -11,13 +12,15 @@
 #define QUAD_NOT_CONTAIN 3
 
 struct Point {
-    float X;
-    float Y;
+    double X;
+    double Y;
+
+    std::string text;
 };
 
 struct Quad {
     Point p;
-    float size;
+    double size;
 
     int ContainPoint(Point p);
     bool IntersectWithQuad(Quad q);
@@ -27,7 +30,7 @@ class QuadTree
 {
 public:
     QuadTree(QuadTree *parent, Quad quad);
-    QuadTree(QuadTree *parent, float X, float Y, float size);
+    QuadTree(QuadTree *parent, double X, double Y, double size);
     ~QuadTree();
 
     int Insert(Point p);
