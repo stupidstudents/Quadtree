@@ -19,7 +19,8 @@ paintScene::~paintScene()
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Point p = {event->scenePos().x(), event->scenePos().y()};
+    Point p = { event->scenePos().x(),
+                event->scenePos().y() };
 
     if (event->buttons() == Qt::LeftButton) {
         QGraphicsItem *item = itemAt(event->scenePos(), QTransform() );
@@ -52,11 +53,7 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else if (event->buttons() == Qt::RightButton) {
         std::vector<Point> points = quadTree->FindPointsArround(Quad {p.X - 4, p.Y - 4, 8});
 
-        if (points.size() == 0) qDebug() <<"Points not found!\n";
-
         for (size_t i = 0; i < points.size(); i++) {
-            qDebug() << "Find: X-" <<points[i].X << ", Y-" << points[i].Y <<"\n";
-
             addLabel(event->scenePos(), QString("test\nstring\ntest"));
         }
     }
@@ -66,11 +63,10 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void paintScene::addLabel(QPointF p, const QString text) {
-    CustomLabel *label = new CustomLabel(p, text, labels);
+    CustomLabel *label = new CustomLabel(p, text);
 
-    if (label->TryToInsert(this))
+    if (label->TryToInsert(this, labels))
         labels->push_back(label);
-    else qDebug() <<"Try to ins false";
 }
 
 void paintScene::Draw(QuadTree *qTree) {

@@ -1,73 +1,123 @@
 #include "customlabel.h"
 
-CustomLabel::CustomLabel(QPointF p, const QString &text, QVector<CustomLabel *> *labels, QWidget *parent) : QLabel(parent) {
+CustomLabel::CustomLabel(QPointF p, const QString &text, QWidget *parent) : QLabel(parent) {
     this->p = p;
-    this->labels = labels;
+
+    setFont(QFont("Arial", 12, 400));
     setText(text);
+
 }
 
 CustomLabel::~CustomLabel() {
     delete line;
+    delete dot;
+    delete proxy;
 }
 
-/*bool CustomLabel::checkIntersect() {
+bool CustomLabel::checkIntersect(QVector<CustomLabel *> *labels) {
     for (size_t i = 0; i < labels->size(); i++) {
-        if(
-                (geometry().x() > labels->at(i)->geometry().x() && geometry().x() < (labels->at(i)->geometry().x() + labels->at(i)->geometry().width())) ||
-                ((geometry().x() + geometry().width()) > labels->at(i)->geometry().x() && (geometry().x() + geometry().width()) < (labels->at(i)->geometry().x() + labels->at(i)->geometry().width())) ||
-                (geometry().y() > labels->at(i)->geometry().y() && geometry().y() < (labels->at(i)->geometry().y() + labels->at(i)->geometry().height())) ||
-                ((geometry().y() + geometry().height()) > labels->at(i)->geometry().y() && (geometry().y() + geometry().height()) < (labels->at(i)->geometry().y() + labels->at(i)->geometry().height())) ||
-                (labels->at(i)->geometry().x() > geometry().x() && labels->at(i)->geometry().x() < (geometry().x() + geometry().width())) ||
-                ((labels->at(i)->geometry().x() + labels->at(i)->geometry().width()) > geometry().x() && (labels->at(i)->geometry().x() + labels->at(i)->geometry().width()) < (geometry().x() + geometry().width())) ||
-                (labels->at(i)->geometry().y() > geometry().y() && labels->at(i)->geometry().y() < (geometry().y() + geometry().height())) ||
-            ((labels->at(i)->geometry().y() + labels->at(i)->geometry().height()) > geometry().y() && (labels->at(i)->geometry().y() + labels->at(i)->geometry().height()) < (geometry().y() + geometry().height()))
-          )
-            return true;
-    }
-
-    return false;
-}*/
-
-bool CustomLabel::checkIntersect() {
-    qDebug() << "\n" <<proxy->geometry();
-    qDebug() <<"---------";
-    for (size_t i = 0; i < labels->size(); i++) {
-        qDebug() <<labels->at(i)->proxy->geometry();
         if (proxy->geometry().intersects(labels->at(i)->geometry())) return true;
     }
 
     return false;
 }
 
-
-
-bool CustomLabel::TryToInsert(QGraphicsScene *scene) {
+bool CustomLabel::TryToInsert(QGraphicsScene *scene, QVector<CustomLabel *> *labels) {
     proxy = scene->addWidget(this);
+    proxy->setZValue(1);
 
-    for (double angle = 0; angle < 360; angle += 10) {
-        proxy->setPos(MoveOnCircle(angle));
+    for (double angle = 0; angle < 360; angle += 20) {
+        previousPoint = MoveOnCircle(angle);
+        QPointF circlePoint = previousPoint;
 
-        if (!checkIntersect()) {
-            addToScene(scene, false);
+        if (angle >= 0 && angle < 90) ChangeCoords(&previousPoint, 0, -proxy->geometry().height());
+        else if (angle >= 90 && angle < 180) ChangeCoords(&previousPoint, -proxy->geometry().width(), -proxy->geometry().height());
+        else if (angle >= 180 && angle < 270) ChangeCoords(&previousPoint, -proxy->geometry().width(), 0);
+        else if (angle >= 270 && angle < 360) ChangeCoords(&previousPoint, 0, 0);
 
-            return true;
+        proxy->setPos(previousPoint);
+
+        if (angle != 0 && angle != 180) {
+            for (size_t i = 0; i < SideStep; i++) {
+                MoveBySide(angle, proxy->geometry().width() / SideStep, 0);
+
+                if (!checkIntersect(labels)) {
+                    addToScene(scene, &circlePoint);
+                    return true;
+                }
+            }
         }
+
+        proxy->setPos(previousPoint);
+
+        if (angle != 90 && angle != 270) {
+            for (size_t i = 0; i < SideStep; i++) {
+                MoveBySide(angle, 0, proxy->geometry().height() / SideStep);
+
+                if (!checkIntersect(labels)) {
+                    addToScene(scene, &circlePoint);
+                    return true;
+                }
+            }
+        }
+
     }
-    addToScene(scene, true);
+    addToScene(scene, nullptr);
     return false;
 }
 
 QPointF CustomLabel::MoveOnCircle(double step) {
     QPointF point;
 
-    point.setX(p.x() + 20 * qCos(qDegreesToRadians(step)));
-    point.setY(p.y() + 20 * qSin(qDegreesToRadians(step)));
+    point.setX(p.x() + Radius * qCos(qDegreesToRadians(-step)));
+    point.setY(p.y() + Radius * qSin(qDegreesToRadians(-step)));
 
     return point;
 }
 
-void CustomLabel::addToScene(QGraphicsScene *scene, bool intersected) {
-    line = scene->addLine(p.x(), p.y(), proxy->geometry().x(), proxy->geometry().y(), QPen(Qt::lightGray));
-    if (intersected) proxy->widget()->setStyleSheet("QLabel {background-color: red;}");
+void CustomLabel::MoveBySide(double angle, double wStep, double hStep) {
+    QPointF point = proxy->pos();
+
+    if (angle >= 0 && angle < 90) {
+        //Первая четверть
+        //geom.moveBottomLeft(QPointF(wStep, hStep));
+        ChangeCoords(&point, -wStep, hStep);
+    }
+    else if (angle >= 90 && angle < 180) {
+        //Вторая четверть
+        //geom.moveBottomRight(QPointF(wStep, hStep));
+        ChangeCoords(&point, wStep, hStep);
+    }
+    else if (angle >= 180 && angle < 270) {
+        //Третья четверть
+        //geom.moveTopRight(QPointF(wStep, hStep));
+        ChangeCoords(&point, wStep, -hStep);
+    }
+    else if (angle >= 270 && angle < 360) {
+        //geom.moveTopLeft(QPointF(wStep, hStep));
+        ChangeCoords(&point, -wStep, -hStep);
+    }
+
+    proxy->setPos(point);
 }
 
+void CustomLabel::ChangeCoords(QPointF *point, qreal delX, qreal delY) {
+    point->setX(point->x() + delX);
+    point->setY(point->y() + delY);
+}
+
+void CustomLabel::addToScene(QGraphicsScene *scene, QPointF *point) {
+    QPen pen(Qt::black, 1);
+    QPointF cPoint;
+
+    if (!point) {
+        cPoint = MoveOnCircle(0);
+        proxy->widget()->setStyleSheet("QLabel {background-color: #FF9999; border: 1px solid black;}");
+    }
+    else {
+        cPoint = *point;
+    }
+
+    line = scene->addLine(p.x(), p.y(), cPoint.x(), cPoint.y(), pen);
+    dot = scene->addEllipse(cPoint.x() - 2, cPoint.y() - 2, 4, 4, Qt::NoPen, Qt::black);
+}
