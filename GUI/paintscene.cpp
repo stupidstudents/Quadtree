@@ -14,7 +14,6 @@ paintScene::~paintScene()
     labels->clear();
 
     delete labels;
-    delete quadTree;
 }
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)

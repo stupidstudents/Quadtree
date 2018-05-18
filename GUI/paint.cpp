@@ -20,16 +20,23 @@ paint::paint(QWidget *parent) :
 
 paint::~paint()
 {
+    delete timer;
+    delete scene;
+    delete quadTree;
     delete ui;
 }
 
 void paint::slotTimer(){
     timer->stop();
     scene->setSceneRect(0,0,ui->graphicsView->width() - 20, ui->graphicsView->height() - 20);
-
 }
 
 void paint::resizeEvent(QResizeEvent *event){
     timer->start(100);
     QWidget::resizeEvent(event);
+}
+
+void paint::on_openFile_triggered()
+{
+
 }

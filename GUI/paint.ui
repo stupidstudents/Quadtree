@@ -41,7 +41,7 @@
     <property name="title">
      <string>Меню</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="openFile"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -50,7 +50,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <action name="action">
+  <action name="openFile">
    <property name="text">
     <string>Загрузить точки из файла...</string>
    </property>
