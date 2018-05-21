@@ -1,21 +1,17 @@
 #ifndef READFILE_H
 #define READFILE_H
 #include <fstream>
-#include <iostream>
-#include <cstdio>
 #include <string>
 #include <vector>
 #include <cstring>
+#include "quadtree.h"
 
 
 class ReadFile
 {
 
 public:
-    ReadFile();
-    void reading();
-
-
+    int reading(std::string Filename, std::vector<Point*> *points);
 };
 
 #endif // READFILE_H

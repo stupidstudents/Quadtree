@@ -50,9 +50,10 @@ public:
     QuadTree *q4 = nullptr;
 
     QuadTree *parent = nullptr;
+
+    std::vector<Point*> points;
 private:
     static const int POINT_COUNT = 1;
-    std::vector<Point*> points;
     bool filled = false;
 };
 

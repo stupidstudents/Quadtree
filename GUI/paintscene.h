@@ -19,12 +19,14 @@ public:
     explicit paintScene(QuadTree *quadTree, QObject *parent = 0);
     ~paintScene();
 
+    void reDraw();
 private:
     QuadTree *quadTree;
     QVector<CustomLabel *> *labels;
     long unsigned int z_ind = 1;
 
-    void Draw(QuadTree *qTree);
+    void Draw(QuadTree *qTree, bool withPoints = false);
+    void DrawPoints(QuadTree *q);
 
     void addLabel(Point *p, const QString text);
     CustomLabel* tryCastToCLabel(QPointF point);

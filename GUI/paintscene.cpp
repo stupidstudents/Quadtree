@@ -97,13 +97,33 @@ bool paintScene::showPointTextInputDialog(std::string *text) {
     return success;
 }
 
-void paintScene::Draw(QuadTree *qTree) {
-    if (qTree->q1) {
-        addRect(qTree->q1->quad.p.X, qTree->q1->quad.p.Y, qTree->q1->quad.size, qTree->q1->quad.size, QPen(Qt::lightGray)); Draw(qTree->q1);
-        addRect(qTree->q2->quad.p.X, qTree->q2->quad.p.Y, qTree->q2->quad.size, qTree->q2->quad.size, QPen(Qt::lightGray)); Draw(qTree->q2);
-        addRect(qTree->q3->quad.p.X, qTree->q3->quad.p.Y, qTree->q3->quad.size, qTree->q3->quad.size, QPen(Qt::lightGray)); Draw(qTree->q3);
-        addRect(qTree->q4->quad.p.X, qTree->q4->quad.p.Y, qTree->q4->quad.size, qTree->q4->quad.size, QPen(Qt::lightGray)); Draw(qTree->q4);
+void paintScene::reDraw() {
+    if (quadTree) Draw(quadTree, true);
+}
+
+void paintScene::DrawPoints(QuadTree *q) {
+    for (size_t i = 0; i < q->points.size(); i++) {
+        addEllipse(q->points[i]->X - 2, q->points[i]->Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
     }
 }
+
+void paintScene::Draw(QuadTree *qTree, bool withPoints) {
+    if (qTree->q1) {
+        addRect(qTree->q1->quad.p.X, qTree->q1->quad.p.Y, qTree->q1->quad.size, qTree->q1->quad.size, QPen(Qt::lightGray)); Draw(qTree->q1, withPoints);
+        addRect(qTree->q2->quad.p.X, qTree->q2->quad.p.Y, qTree->q2->quad.size, qTree->q2->quad.size, QPen(Qt::lightGray)); Draw(qTree->q2, withPoints);
+        addRect(qTree->q3->quad.p.X, qTree->q3->quad.p.Y, qTree->q3->quad.size, qTree->q3->quad.size, QPen(Qt::lightGray)); Draw(qTree->q3, withPoints);
+        addRect(qTree->q4->quad.p.X, qTree->q4->quad.p.Y, qTree->q4->quad.size, qTree->q4->quad.size, QPen(Qt::lightGray)); Draw(qTree->q4, withPoints);
+
+        if (withPoints) {
+            DrawPoints(qTree);
+            DrawPoints(qTree->q1);
+            DrawPoints(qTree->q2);
+            DrawPoints(qTree->q3);
+            DrawPoints(qTree->q4);
+        }
+    }
+}
+
+
 
 

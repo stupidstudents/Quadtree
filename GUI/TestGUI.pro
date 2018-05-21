@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         paint.cpp \
     paintscene.cpp \
     quadtree.cpp \
-    customlabel.cpp
+    customlabel.cpp \
+    readfile.cpp
 
 HEADERS  += paint.h \
     paintscene.h \
     quadtree.h \
-    customlabel.h
+    customlabel.h \
+    readfile.h
 
 FORMS    += paint.ui

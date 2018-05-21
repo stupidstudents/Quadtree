@@ -1,11 +1,20 @@
 #include "paint.h"
 #include "ui_paint.h"
+#include "readfile.h"
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QDesktopWidget>
 
 paint::paint(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::paint)
 {
     ui->setupUi(this);
+
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    int x = (screenGeometry.width() - this->width()) / 2;
+    int y = (screenGeometry.height()-  this->height()) / 2;
+    this->move(x, y);
 
     quadTree = new QuadTree(nullptr, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
     scene = new paintScene(quadTree);
@@ -37,5 +46,26 @@ void paint::resizeEvent(QResizeEvent *event){
 
 void paint::on_openFile_triggered()
 {
+    ReadFile reader;
+    std::vector<Point*> points;
 
+    QString filename =  QFileDialog::getOpenFileName(
+          this,
+          "Open file with points",
+          QDir::currentPath(),
+          "Txt files (*.txt)");
+
+    if( !filename.isNull() ) {
+        if (reader.reading(filename.toUtf8().constData(), &points) == 1) {
+            for (int i = 0; i < points.size() - 1; i++) {
+                quadTree->Insert(points[i]);
+            }
+            scene->reDraw();
+        }
+        else {
+            QMessageBox messageBox;
+            messageBox.critical(0,"Error","Error reading file!");
+            messageBox.setFixedSize(500,200);
+        }
+    }
 }
