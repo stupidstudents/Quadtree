@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdio.h>
+#include <string>
 
 #define INSERT_FAIL -1
 #define INSERT_SUCCESS 0
@@ -11,15 +12,18 @@
 #define QUAD_NOT_CONTAIN 3
 
 struct Point {
-    float X;
-    float Y;
+    double X;
+    double Y;
+
+    std::string text;
+    bool clicked;
 };
 
 struct Quad {
     Point p;
-    float size;
+    double size;
 
-    int ContainPoint(Point p);
+    int ContainPoint(Point *p);
     bool IntersectWithQuad(Quad q);
 };
 
@@ -27,24 +31,29 @@ class QuadTree
 {
 public:
     QuadTree(QuadTree *parent, Quad quad);
-    QuadTree(QuadTree *parent, float X, float Y, float size);
+    QuadTree(QuadTree *parent, double X, double Y, double size);
     ~QuadTree();
 
-    int Insert(Point p);
+    int Insert(Point *p);
     void Divide();
-    std::vector<Point> FindPointsArround(Quad q);
+
+    Quad MakeQuad(double X, double Y, double size);
+    Point MakePoint(double X, double Y, std::string text = "");
+
+    std::vector<Point*> FindPointsArround(Quad q);
+
+    Quad quad;
 
     QuadTree *q1 = nullptr;
     QuadTree *q2 = nullptr;
     QuadTree *q3 = nullptr;
     QuadTree *q4 = nullptr;
 
-    Quad quad;
-
     QuadTree *parent = nullptr;
+
+    std::vector<Point*> points;
 private:
     static const int POINT_COUNT = 1;
-    std::vector<Point> points;
     bool filled = false;
 };
 
