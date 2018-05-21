@@ -15,29 +15,35 @@ ReadFile::ReadFile()
 }
 
 
-void ReadFile::reading(){
+vector<Point> ReadFile::reading(string Filename){
    vector<Point>points;
    Point p;
-   setlocale(LC_ALL, "rus");
    string str;
+   char buff[50];
+   char * ptrEnd = NULL;
    ifstream fin;
-   int i=0;
-   fin.open("data.txt");
+   fin.open(Filename);
     if(fin){
             while(!fin.eof()){
-                points.push_back(p);
-                fin >> points.at(i).x;
-                fin >> points.at(i).y;
+
+
+                fin >> buff;
+                p.x = strtod(buff, &ptrEnd);
+                if(*ptrEnd != '\0')
+                    cout<< "Ошибка формата ввода";
+                fin >> buff;
+                p.y = strtod(buff, &ptrEnd);
+                if(*ptrEnd != '\0')
+                    cout<< "Ошибка формата ввода";
                 getline(fin, str);
-                points.at(i).Inf = str;
-                i++;
+                p.Inf = str;
+                points.push_back(p);
             }
             fin.close();
     }
     else
         cout<<"file was not opened";
-    for(vector<Point>::iterator it = points.begin(); it!=points.end();it++){
-        cout<<it->x<<" "<<it->y<<" "<<it->Inf<<endl;
-    }
+    return points;
+
 }
 

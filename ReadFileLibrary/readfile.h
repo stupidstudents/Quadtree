@@ -13,7 +13,7 @@ class ReadFile
 
 public:
     ReadFile();
-    void reading();
+    vector<Point> reading(string Filename);
 
 
 };
