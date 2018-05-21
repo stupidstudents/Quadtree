@@ -23,7 +23,7 @@ struct Quad {
     Point p;
     double size;
 
-    int ContainPoint(Point p);
+    int ContainPoint(Point *p);
     bool IntersectWithQuad(Quad q);
 };
 
@@ -34,7 +34,7 @@ public:
     QuadTree(QuadTree *parent, double X, double Y, double size);
     ~QuadTree();
 
-    int Insert(Point p);
+    int Insert(Point *p);
     void Divide();
 
     Quad MakeQuad(double X, double Y, double size);
@@ -42,17 +42,17 @@ public:
 
     std::vector<Point*> FindPointsArround(Quad q);
 
+    Quad quad;
+
     QuadTree *q1 = nullptr;
     QuadTree *q2 = nullptr;
     QuadTree *q3 = nullptr;
     QuadTree *q4 = nullptr;
 
-    Quad quad;
-
     QuadTree *parent = nullptr;
 private:
     static const int POINT_COUNT = 1;
-    std::vector<Point> points;
+    std::vector<Point*> points;
     bool filled = false;
 };
 

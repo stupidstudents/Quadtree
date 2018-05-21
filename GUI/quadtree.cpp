@@ -22,6 +22,12 @@ QuadTree::~QuadTree() {
     delete q2;
     delete q3;
     delete q4;
+
+    for (size_t i = 0; i < points.size(); i++) {
+        delete points[i];
+    }
+
+    points.clear();
 }
 
 bool Quad::IntersectWithQuad(Quad q) {
@@ -40,11 +46,11 @@ bool Quad::IntersectWithQuad(Quad q) {
         return false;
 }
 
-int Quad::ContainPoint(Point p) {
-    if ( ((p.X > this->p.X) && (p.X < (this->p.X + this->size) )) && ( (p.Y > this->p.Y) && (p.Y < (this->p.Y + this->size)) )) return QUAD_CONTAIN;
+int Quad::ContainPoint(Point *p) {
+    if ( ((p->X > this->p.X) && (p->X < (this->p.X + this->size) )) && ( (p->Y > this->p.Y) && (p->Y < (this->p.Y + this->size)) )) return QUAD_CONTAIN;
     else if (
-                ( ((p.X == this->p.X) || p.X == (this->p.X + this->size)) && (p.Y >= this->p.Y && p.Y <= this->p.Y + this->size) ) ||
-                ( (p.Y == this->p.Y || p.Y == (this->p.Y + this->size))  &&  (p.X >= this->p.X && p.X <= this->p.X + this->size))
+                ( ((p->X == this->p.X) || p->X == (this->p.X + this->size)) && (p->Y >= this->p.Y && p->Y <= this->p.Y + this->size) ) ||
+                ( (p->Y == this->p.Y || p->Y == (this->p.Y + this->size))  &&  (p->X >= this->p.X && p->X <= this->p.X + this->size))
             ) return QUAD_BORDER_INTERSECT;
     else return QUAD_NOT_CONTAIN;
 }
@@ -67,7 +73,7 @@ void QuadTree::Divide() {
     q4 = new QuadTree(this, qd4);
 }
 
-int QuadTree::Insert(Point p) {
+int QuadTree::Insert(Point *p) {
     if (parent) {
         for (size_t i = 0; i < parent->points.size(); i++) {
             if (quad.ContainPoint(parent->points[i]) == QUAD_CONTAIN) {
@@ -104,7 +110,7 @@ vector<Point*> QuadTree::FindPointsArround(Quad q) {
     if (!quad.IntersectWithQuad(q)) return pointsInQuad;
 
     for (size_t i = 0; i < points.size(); i++) {
-        if (q.ContainPoint(points[i]) == QUAD_CONTAIN) pointsInQuad.push_back(&points[i]);
+        if (q.ContainPoint(points[i]) == QUAD_CONTAIN) pointsInQuad.push_back(points[i]);
     }
 
     if (!q1) return pointsInQuad;

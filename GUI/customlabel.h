@@ -1,14 +1,10 @@
 #ifndef CUSTOMLABEL_H
 #define CUSTOMLABEL_H
 
-#include <QObject>
-#include <QMouseEvent>
 #include <QLabel>
-#include <QWidget>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QtMath>
-#include <QDebug>
 #include "quadtree.h"
 
 class CustomLabel : public QLabel

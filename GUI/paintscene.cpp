@@ -9,30 +9,36 @@ paintScene::paintScene(QuadTree *quadTree, QObject *parent) : QGraphicsScene(par
 
 paintScene::~paintScene()
 {
+    for (size_t i = 0; i < labels->size(); i++) {
+        delete labels->at(i);
+    }
+
     labels->clear();
     delete labels;
 }
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Point p = quadTree->MakePoint(event->scenePos().x(), event->scenePos().y());
+    Point *p = new Point();
+    p->X = event->scenePos().x();
+    p->Y = event->scenePos().y();
 
     if (event->buttons() == Qt::LeftButton) {
         if (tryShowOnTop(tryCastToCLabel(event->scenePos()))) return;
 
         std::string point_text;
-        if (showPointTextInputDialog(&point_text)) p.text = point_text;
+        if (showPointTextInputDialog(&point_text)) p->text = point_text;
         else return;
 
         if (quadTree->Insert(p) == INSERT_SUCCESS) {
-            addEllipse(p.X - 2, p.Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
+            addEllipse(p->X - 2, p->Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
             Draw(quadTree);
         }
     }
     else if (event->buttons() == Qt::RightButton) {
         if (tryCloseLabel(tryCastToCLabel(event->scenePos()))) return;
 
-        std::vector<Point*> points = quadTree->FindPointsArround(quadTree->MakeQuad(p.X - 4, p.Y - 4, 8));
+        std::vector<Point*> points = quadTree->FindPointsArround(quadTree->MakeQuad(p->X - 4, p->Y - 4, 8));
 
         for (int i = 0; i < points.size(); i++) {
             if (points[i]->clicked) return;
