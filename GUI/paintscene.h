@@ -20,17 +20,19 @@ public:
     ~paintScene();
 
 private:
-    QPointF previousPoint;
     QuadTree *quadTree;
     QVector<CustomLabel *> *labels;
     long unsigned int z_ind = 1;
 
     void Draw(QuadTree *qTree);
 
-    void addLabel(QPointF p, const QString text);
-    bool tryCloseLabel(QPointF point);
+    void addLabel(Point *p, const QString text);
+    CustomLabel* tryCastToCLabel(QPointF point);
+    bool tryCloseLabel(CustomLabel *label);
+    bool tryShowOnTop(CustomLabel *label);
 
-    std::string showPointTextInputDialog();
+
+    bool showPointTextInputDialog(std::string *text);
 
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
 };

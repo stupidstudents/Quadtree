@@ -15,43 +15,42 @@ paintScene::~paintScene()
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Point p = { event->scenePos().x(),
-                event->scenePos().y() };
+    Point p = quadTree->MakePoint(event->scenePos().x(), event->scenePos().y());
 
     if (event->buttons() == Qt::LeftButton) {
-        if (tryCloseLabel(event->scenePos())) return;
+        if (tryShowOnTop(tryCastToCLabel(event->scenePos()))) return;
 
-        p.text = showPointTextInputDialog();
+        std::string point_text;
+        if (showPointTextInputDialog(&point_text)) p.text = point_text;
+        else return;
+
         if (quadTree->Insert(p) == INSERT_SUCCESS) {
-            addEllipse(p.X - 2,
-                       p.Y - 2,
-                       4,
-                       4,
-                       QPen(Qt::NoPen),
-                       QBrush(Qt::red));
+            addEllipse(p.X - 2, p.Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
             Draw(quadTree);
         }
     }
     else if (event->buttons() == Qt::RightButton) {
-        std::vector<Point> points = quadTree->FindPointsArround(Quad {p.X - 4, p.Y - 4, "", 8});
+        if (tryCloseLabel(tryCastToCLabel(event->scenePos()))) return;
 
-        for (size_t i = 0; i < points.size(); i++) {
-            addLabel(event->scenePos(), QString::fromUtf8(points[i].text.c_str()));
+        std::vector<Point*> points = quadTree->FindPointsArround(quadTree->MakeQuad(p.X - 4, p.Y - 4, 8));
+
+        for (int i = 0; i < points.size(); i++) {
+            if (points[i]->clicked) return;
+
+            points[i]->clicked = true;
+            addLabel(points[i], QString::fromUtf8(points[i]->text.c_str()));
         }
     }
-
-
-    previousPoint = event->scenePos();
 }
 
-void paintScene::addLabel(QPointF p, const QString text) {
+void paintScene::addLabel(Point *p, const QString text) {
     CustomLabel *label = new CustomLabel(p, text, z_ind++);
 
     label->TryToInsert(this, labels);
     labels->push_back(label);
 }
 
-bool paintScene::tryCloseLabel(QPointF point) {
+CustomLabel* paintScene::tryCastToCLabel(QPointF point) {
     QGraphicsItem *item = itemAt(point, QTransform() );
 
     if (item) {
@@ -59,24 +58,37 @@ bool paintScene::tryCloseLabel(QPointF point) {
 
         if (labelProxy) {
             CustomLabel *label = dynamic_cast<CustomLabel*>(labelProxy->widget());
-
-            if (label) {
-                labels->remove(labels->indexOf(label));
-                delete label;
-                return true;
-            }
+            return label;
         }
 
     }
 
-    return false;
+    return nullptr;
 }
 
-std::string paintScene::showPointTextInputDialog() {
-    bool success;
-    QString text = QInputDialog::getText(nullptr, tr("Enter point data"), tr("Data:"), QLineEdit::Normal, tr("Enter some text for label..."), &success);
+bool paintScene::tryCloseLabel(CustomLabel *label) {
+    if (!label) return false;
 
-    return text.toUtf8().constData();
+    label->P()->clicked = false;
+    labels->remove(labels->indexOf(label));
+    delete label;
+
+    return true;
+}
+
+bool paintScene::tryShowOnTop(CustomLabel *label) {
+    if (!label) return false;
+
+    label->setZIndex(z_ind++);
+    return true;
+}
+
+bool paintScene::showPointTextInputDialog(std::string *text) {
+    bool success;
+    QString _text = QInputDialog::getText(nullptr, tr("Enter point data"), tr("Data:"), QLineEdit::Normal, tr("Enter some text for label..."), &success);
+    *text = _text.toUtf8().constData();
+
+    return success;
 }
 
 void paintScene::Draw(QuadTree *qTree) {

@@ -16,6 +16,7 @@ struct Point {
     double Y;
 
     std::string text;
+    bool clicked;
 };
 
 struct Quad {
@@ -35,7 +36,11 @@ public:
 
     int Insert(Point p);
     void Divide();
-    std::vector<Point> FindPointsArround(Quad q);
+
+    Quad MakeQuad(double X, double Y, double size);
+    Point MakePoint(double X, double Y, std::string text = "");
+
+    std::vector<Point*> FindPointsArround(Quad q);
 
     QuadTree *q1 = nullptr;
     QuadTree *q2 = nullptr;

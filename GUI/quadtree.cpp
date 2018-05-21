@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void InsertInVector(vector<Point> *b, vector<Point> e) {
+void InsertInVector(vector<Point*> *b, vector<Point*> e) {
     b->insert(b->end(), e.begin(), e.end());
 }
 
@@ -14,7 +14,7 @@ QuadTree::QuadTree(QuadTree *parent, Quad quad)
 
 QuadTree::QuadTree(QuadTree *parent, double X, double Y, double size) {
     this->parent = parent;
-    this->quad = Quad {X, Y, "", size};
+    this->quad = Quad {MakePoint(X, Y), size};
 }
 
 QuadTree::~QuadTree() {
@@ -55,15 +55,15 @@ void QuadTree::Divide() {
     q1 = new QuadTree(this, qd1);
 
     //Quad2
-    Quad qd2 = {quad.p.X + quad.size / 2, quad.p.Y, "", quad.size / 2};
+    Quad qd2 = { MakePoint(quad.p.X + quad.size / 2, quad.p.Y), quad.size / 2};
     q2 = new QuadTree(this, qd2);
 
     //Quad3
-    Quad qd3 = {quad.p.X, quad.p.Y + quad.size / 2, "", quad.size / 2};
+    Quad qd3 = { MakePoint(quad.p.X, quad.p.Y + quad.size / 2), quad.size / 2};
     q3 = new QuadTree(this, qd3);
 
     //Quad4
-    Quad qd4 = {quad.p.X + quad.size / 2, quad.p.Y + quad.size / 2, "", quad.size / 2};
+    Quad qd4 = { MakePoint(quad.p.X + quad.size / 2, quad.p.Y + quad.size / 2), quad.size / 2};
     q4 = new QuadTree(this, qd4);
 }
 
@@ -98,13 +98,13 @@ int QuadTree::Insert(Point p) {
     return INSERT_FAIL;
 }
 
-vector<Point> QuadTree::FindPointsArround(Quad q) {
-    vector<Point> pointsInQuad;
+vector<Point*> QuadTree::FindPointsArround(Quad q) {
+    vector<Point*> pointsInQuad;
 
     if (!quad.IntersectWithQuad(q)) return pointsInQuad;
 
     for (size_t i = 0; i < points.size(); i++) {
-        if (q.ContainPoint(points[i]) == QUAD_CONTAIN) pointsInQuad.push_back(points[i]);
+        if (q.ContainPoint(points[i]) == QUAD_CONTAIN) pointsInQuad.push_back(&points[i]);
     }
 
     if (!q1) return pointsInQuad;
@@ -115,4 +115,20 @@ vector<Point> QuadTree::FindPointsArround(Quad q) {
     InsertInVector(&pointsInQuad, q4->FindPointsArround(q));
 
     return pointsInQuad;
+}
+
+Point QuadTree::MakePoint(double X, double Y, std::string text) {
+    Point p;
+
+    p.X = X;
+    p.Y = Y;
+    p.text = text;
+    p.clicked = false;
+
+    return p;
+}
+
+Quad QuadTree::MakeQuad(double X, double Y, double size) {
+    Point p = MakePoint(X, Y);
+    return Quad {p, size};
 }
