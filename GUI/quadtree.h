@@ -42,13 +42,13 @@ public:
 
     std::vector<Point*> FindPointsArround(Quad q);
 
-    Quad getQuad();
-    QuadTree* getQ1();
-    QuadTree* getQ2();
-    QuadTree* getQ3();
-    QuadTree* getQ4();
-    QuadTree* getParent();
-    std::vector<Point*> getPoints();
+    Quad getQuad() const;
+    QuadTree* getQ1() const;
+    QuadTree* getQ2() const;
+    QuadTree* getQ3() const;
+    QuadTree* getQ4() const;
+    QuadTree* getParent() const;
+    std::vector<Point*> getPoints() const;
 
 private:
     static const int POINT_COUNT = 1;
