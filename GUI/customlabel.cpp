@@ -71,7 +71,7 @@ bool CustomLabel::TryToInsert(QGraphicsScene *scene, QVector<CustomLabel *> *lab
         }
 
     }
-    addToScene(scene, nullptr);
+    addToScene(scene, 0);
     return false;
 }
 

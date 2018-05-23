@@ -44,12 +44,12 @@ public:
 
     Quad quad;
 
-    QuadTree *q1 = nullptr;
-    QuadTree *q2 = nullptr;
-    QuadTree *q3 = nullptr;
-    QuadTree *q4 = nullptr;
+    QuadTree *q1 = 0;
+    QuadTree *q2 = 0;
+    QuadTree *q3 = 0;
+    QuadTree *q4 = 0;
 
-    QuadTree *parent = nullptr;
+    QuadTree *parent = 0;
 
     std::vector<Point*> points;
 private:

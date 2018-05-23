@@ -69,7 +69,7 @@ CustomLabel* paintScene::tryCastToCLabel(QPointF point) {
 
     }
 
-    return nullptr;
+    return 0;
 }
 
 bool paintScene::tryCloseLabel(CustomLabel *label) {
@@ -91,7 +91,7 @@ bool paintScene::tryShowOnTop(CustomLabel *label) {
 
 bool paintScene::showPointTextInputDialog(std::string *text) {
     bool success;
-    QString _text = QInputDialog::getText(nullptr, tr("Enter point data"), tr("Data:"), QLineEdit::Normal, tr("Enter some text for label..."), &success);
+    QString _text = QInputDialog::getText(0, tr("Enter point data"), tr("Data:"), QLineEdit::Normal, tr("Enter some text for label..."), &success);
     *text = _text.toUtf8().constData();
 
     return success;

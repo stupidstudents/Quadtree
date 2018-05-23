@@ -16,7 +16,7 @@ paint::paint(QWidget *parent) :
     int y = (screenGeometry.height()-  this->height()) / 2;
     this->move(x, y);
 
-    quadTree = new QuadTree(nullptr, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
+    quadTree = new QuadTree(0, (float)ui->graphicsView->x(), (float)ui->graphicsView->y(), (float)ui->graphicsView->width() - 20);
     scene = new paintScene(quadTree);
 
     ui->graphicsView->setScene(scene);

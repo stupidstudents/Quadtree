@@ -7,10 +7,12 @@ int ReadFile::reading(string Filename, vector<Point*> *points){
    char buff[50];
    char * ptrEnd = NULL;
    ifstream fin;
-   fin.open(Filename);
+   fin.open(Filename.c_str());
 
    if(fin){
-            while(!fin.eof()){
+            while(true){
+                if(fin.eof()) break;
+
                 Point *p = new Point();
 
                 fin >> buff;

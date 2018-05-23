@@ -11,7 +11,7 @@ class CustomLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit CustomLabel(Point *p, const QString &text, long unsigned int z_ind, QWidget *parent = nullptr);
+    explicit CustomLabel(Point *p, const QString &text, long unsigned int z_ind, QWidget *parent = 0);
     ~CustomLabel();
 
     bool TryToInsert(QGraphicsScene *scene, QVector<CustomLabel *> *labels);
