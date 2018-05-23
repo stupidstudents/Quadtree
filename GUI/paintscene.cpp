@@ -102,24 +102,25 @@ void paintScene::reDraw() {
 }
 
 void paintScene::DrawPoints(QuadTree *q) {
-    for (size_t i = 0; i < q->points.size(); i++) {
-        addEllipse(q->points[i]->X - 2, q->points[i]->Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
+    std::vector<Point*> points = q->getPoints();
+    for (size_t i = 0; i < points.size(); i++) {
+        addEllipse(points[i]->X - 2, points[i]->Y - 2, 4, 4, QPen(Qt::NoPen), QBrush(Qt::red));
     }
 }
 
 void paintScene::Draw(QuadTree *qTree, bool withPoints) {
-    if (qTree->q1) {
-        addRect(qTree->q1->quad.p.X, qTree->q1->quad.p.Y, qTree->q1->quad.size, qTree->q1->quad.size, QPen(Qt::lightGray)); Draw(qTree->q1, withPoints);
-        addRect(qTree->q2->quad.p.X, qTree->q2->quad.p.Y, qTree->q2->quad.size, qTree->q2->quad.size, QPen(Qt::lightGray)); Draw(qTree->q2, withPoints);
-        addRect(qTree->q3->quad.p.X, qTree->q3->quad.p.Y, qTree->q3->quad.size, qTree->q3->quad.size, QPen(Qt::lightGray)); Draw(qTree->q3, withPoints);
-        addRect(qTree->q4->quad.p.X, qTree->q4->quad.p.Y, qTree->q4->quad.size, qTree->q4->quad.size, QPen(Qt::lightGray)); Draw(qTree->q4, withPoints);
+    if (qTree->getQ1()) {
+        addRect(qTree->getQ1()->getQuad().p.X, qTree->getQ1()->getQuad().p.Y, qTree->getQ1()->getQuad().size, qTree->getQ1()->getQuad().size, QPen(Qt::lightGray)); Draw(qTree->getQ1(), withPoints);
+        addRect(qTree->getQ2()->getQuad().p.X, qTree->getQ2()->getQuad().p.Y, qTree->getQ2()->getQuad().size, qTree->getQ2()->getQuad().size, QPen(Qt::lightGray)); Draw(qTree->getQ2(), withPoints);
+        addRect(qTree->getQ3()->getQuad().p.X, qTree->getQ3()->getQuad().p.Y, qTree->getQ3()->getQuad().size, qTree->getQ3()->getQuad().size, QPen(Qt::lightGray)); Draw(qTree->getQ3(), withPoints);
+        addRect(qTree->getQ4()->getQuad().p.X, qTree->getQ4()->getQuad().p.Y, qTree->getQ4()->getQuad().size, qTree->getQ4()->getQuad().size, QPen(Qt::lightGray)); Draw(qTree->getQ4(), withPoints);
 
         if (withPoints) {
             DrawPoints(qTree);
-            DrawPoints(qTree->q1);
-            DrawPoints(qTree->q2);
-            DrawPoints(qTree->q3);
-            DrawPoints(qTree->q4);
+            DrawPoints(qTree->getQ1());
+            DrawPoints(qTree->getQ2());
+            DrawPoints(qTree->getQ3());
+            DrawPoints(qTree->getQ4());
         }
     }
 }
