@@ -26,21 +26,3 @@ HEADERS  += paint.h \
     readfile.h
 
 FORMS    += paint.ui
-
-unix:!mac {
-
- LIBS += —Wl,—rpath=\\\$$ORIGIN/../lib
-
-} 
-
-target.path = /usr/share/QuadGUI/bin
-
-target.files = QuadGUI qt.conf
-
-INSTALLS += target 
-
-data.path = /usr/share/QuadGUI/lib
-
-data.files = lib/*
-
-INSTALLS += data
