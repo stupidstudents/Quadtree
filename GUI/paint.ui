@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>900</height>
+    <width>600</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dynamic Labels</string>
+   <string>Quad Tree (Dynamic Labels)</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -22,8 +22,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>800</width>
-      <height>800</height>
+      <width>600</width>
+      <height>600</height>
      </rect>
     </property>
    </widget>
@@ -33,17 +33,23 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>600</width>
      <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Меню</string>
+     <string>Menu</string>
     </property>
     <addaction name="openFile"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Language</string>
+    </property>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
@@ -52,7 +58,7 @@
   </widget>
   <action name="openFile">
    <property name="text">
-    <string>Загрузить точки из файла...</string>
+    <string>Load points from file...</string>
    </property>
   </action>
  </widget>

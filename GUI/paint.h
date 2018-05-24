@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QResizeEvent>
+#include <QTranslator>
 #include "quadtree.h"
 
 #include <paintscene.h>
@@ -27,15 +28,23 @@ private:
     paintScene *scene;
     QuadTree *quadTree;
 
-private:
     /* Переопределяем событие изменения размера окна
          * для пересчёта размеров графической сцены
          * */
     void resizeEvent(QResizeEvent * event);
 
+    void loadLanguage(const QString& rLanguage);
+    void createLanguageMenu(void);
+
+    QTranslator m_translator; // contains the translations for this application
+    QTranslator m_translatorQt; // contains the translations for qt
+    QString m_currLang; // contains the currently loaded language
+    QString m_langPath; // Path of language files. This is always fixed to /languages.
+
 private slots:
     void slotTimer();
     void on_openFile_triggered();
+    void slotLanguageChange(QAction *action);
 };
 
 #endif // PAINT_H

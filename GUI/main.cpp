@@ -7,6 +7,5 @@ int main(int argc, char *argv[])
     paint w;
     w.show();
 
-
     return a.exec();
 }
