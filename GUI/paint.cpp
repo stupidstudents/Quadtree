@@ -52,7 +52,14 @@ void switchTranslator(QTranslator& translator, const QString& filename)
     qApp->removeTranslator(&translator);
 
     // load the new translator
-    QString langFile = "/opt/quadgui/languages/" + filename;
+    #ifdef Q_OS_LINUX
+    QString langFile = "/usr/share/quadgui/languages/" + filename;
+    #endif
+
+    #ifdef Q_OS_WIN
+    QString langFile = QApplication::applicationDirPath() + "/languages/" + filename;
+    #endif
+
     if(translator.load(langFile))
         qApp->installTranslator(&translator);
 }
@@ -66,16 +73,23 @@ void paint::createLanguageMenu(void) {
     // format systems language
     QString defaultLocale = "en";
 
-    m_langPath = "/opt/quadgui";
+    #ifdef Q_OS_LINUX
+    m_langPath = "/usr/share/quadgui/languages";
+    #endif
+
+    #ifdef Q_OS_WIN
+    m_langPath = QApplication::applicationDirPath();
     m_langPath.append("/languages");
+    #endif
+
     QDir dir(m_langPath);
     QStringList fileNames = dir.entryList(QStringList("lang_*.qm"));
 
     for (int i = 0; i < fileNames.size(); ++i) {
         // get locale extracted by filename
         QString locale;
-        locale = fileNames[i]; // "TranslationExample_de.qm"
-        locale.truncate(locale.lastIndexOf('.')); // "TranslationExample_de"
+        locale = fileNames[i]; // "lang_de.qm"
+        locale.truncate(locale.lastIndexOf('.')); // "lang_de"
         locale.remove(0, locale.indexOf('_') + 1); // "de"
 
         QString lang = QLocale::languageToString(QLocale(locale).language());
@@ -136,7 +150,7 @@ void paint::on_openFile_triggered()
                 if (points[i]->Y > maxSize) maxSize = points[i]->Y + 5;
             }
             this->setFixedWidth((int)maxSize + 20);
-            this->setFixedHeight((int)maxSize + 60);
+            this->setFixedHeight((int)maxSize + 80);
             this->ui->graphicsView->setFixedWidth((int)maxSize + 20);
             this->ui->graphicsView->setFixedHeight((int)maxSize + 20);
             quadTree->setQuad(quadTree->MakeQuad((double)ui->graphicsView->x(), (double)ui->graphicsView->y(), maxSize));
