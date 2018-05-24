@@ -11,8 +11,6 @@ int ReadFile::reading(string Filename, vector<Point*> *points){
 
    if(fin){
             while(true){
-                if(fin.eof()) break;
-
                 Point *p = new Point();
 
                 fin >> buff;
@@ -26,6 +24,9 @@ int ReadFile::reading(string Filename, vector<Point*> *points){
                 getline(fin, str);
                 p->text = str;
                 p->clicked = false;
+
+                if(fin.eof()) break;
+
                 points->push_back(p);
             }
             fin.close();

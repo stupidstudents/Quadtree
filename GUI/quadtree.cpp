@@ -58,6 +58,10 @@ std::vector<Point*> QuadTree::getPoints() const {
     return points;
 }
 
+void QuadTree::setQuad(const Quad &value) {
+    quad = value;
+}
+
 
 bool Quad::IntersectWithQuad(Quad q) {
     if(

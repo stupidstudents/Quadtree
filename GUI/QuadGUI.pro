@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = quadgui
 TEMPLATE = app
 
+TRANSLATIONS = languages/lang_en.ts languages/lang_ru.ts
 
 SOURCES += main.cpp\
         paint.cpp \
