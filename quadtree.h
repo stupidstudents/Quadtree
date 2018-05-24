@@ -42,19 +42,32 @@ public:
 
     std::vector<Point*> FindPointsArround(Quad q);
 
-    Quad quad;
 
-    QuadTree *q1 = nullptr;
-    QuadTree *q2 = nullptr;
-    QuadTree *q3 = nullptr;
-    QuadTree *q4 = nullptr;
+    Quad getQuad() const;
+    void setQuad(const Quad &value);
 
-    QuadTree *parent = nullptr;
+    QuadTree* getQ1() const;
+    QuadTree* getQ2() const;
+    QuadTree* getQ3() const;
+    QuadTree* getQ4() const;
+    QuadTree* getParent() const;
+    std::vector<Point*> getPoints() const;
 
-    std::vector<Point*> points;
+
 private:
     static const int POINT_COUNT = 1;
     bool filled = false;
+
+    Quad quad;
+
+    QuadTree *q1 = 0;
+    QuadTree *q2 = 0;
+    QuadTree *q3 = 0;
+    QuadTree *q4 = 0;
+
+    QuadTree *parent = 0;
+
+    std::vector<Point*> points;
 };
 
 #endif // QUADTREE_H

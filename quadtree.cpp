@@ -30,9 +30,42 @@ QuadTree::~QuadTree() {
     points.clear();
 }
 
+Quad QuadTree::getQuad() const {
+    return quad;
+}
+
+QuadTree* QuadTree::getQ1() const {
+    return q1;
+}
+
+QuadTree* QuadTree::getQ2() const {
+    return q2;
+}
+
+QuadTree* QuadTree::getQ3() const {
+    return q3;
+}
+
+QuadTree* QuadTree::getQ4() const {
+    return q4;
+}
+
+QuadTree* QuadTree::getParent() const {
+    return parent;
+}
+
+std::vector<Point*> QuadTree::getPoints() const {
+    return points;
+}
+
+void QuadTree::setQuad(const Quad &value) {
+    quad = value;
+}
+
+
 bool Quad::IntersectWithQuad(Quad q) {
     if(
-        (this->p.X > q.p.X && this->p.X < (q.p.X + q.size)) ||
+            (this->p.X > q.p.X && this->p.X < (q.p.X + q.size)) ||
         ((this->p.X + this->size) > q.p.X && (this->p.X + this->size) < (q.p.X + q.size)) ||
         (this->p.Y > q.p.Y && this->p.Y < (q.p.Y + q.size)) ||
         ((this->p.Y + this->size) > q.p.Y && (this->p.Y + this->size) < (q.p.Y + q.size)) ||
