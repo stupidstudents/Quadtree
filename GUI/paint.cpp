@@ -142,6 +142,7 @@ void paint::on_openFile_triggered()
           "Txt files (*.txt)");
 
     if( !filename.isNull() ) {
+
         if (reader.reading(filename.toUtf8().constData(), &points) == 1) {
             if (points.size() == 0) maxSize = ui->graphicsView->width();
 
@@ -153,7 +154,15 @@ void paint::on_openFile_triggered()
             this->setFixedHeight((int)maxSize + 80);
             this->ui->graphicsView->setFixedWidth((int)maxSize + 20);
             this->ui->graphicsView->setFixedHeight((int)maxSize + 20);
-            quadTree->setQuad(quadTree->MakeQuad((double)ui->graphicsView->x(), (double)ui->graphicsView->y(), maxSize));
+
+            Quad quad = quadTree->MakeQuad((double)ui->graphicsView->x(), (double)ui->graphicsView->y(), maxSize);
+            quadTree->~QuadTree();
+            new (quadTree) QuadTree(0, quad);
+
+            scene->~paintScene();
+            new (scene) paintScene(quadTree);
+
+            this->ui->graphicsView->setScene(scene);
 
             for (int i = 0; i < points.size(); i++) {
                 quadTree->Insert(points[i]);

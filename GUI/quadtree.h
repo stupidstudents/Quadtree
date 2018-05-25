@@ -42,9 +42,7 @@ public:
 
     std::vector<Point*> FindPointsArround(Quad q);
 
-
     Quad getQuad() const;
-    void setQuad(const Quad &value);
 
     QuadTree* getQ1() const;
     QuadTree* getQ2() const;
