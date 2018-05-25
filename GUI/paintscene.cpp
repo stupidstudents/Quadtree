@@ -98,7 +98,10 @@ bool paintScene::showPointTextInputDialog(std::string *text) {
 }
 
 void paintScene::reDraw() {
-    if (quadTree) Draw(quadTree, true);
+    if (quadTree) {
+        clear();
+        Draw(quadTree, true);
+    }
 }
 
 void paintScene::DrawPoints(QuadTree *q) {
